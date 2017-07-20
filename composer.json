@@ -1,0 +1,19 @@
+{
+  "name": "pckg-app/impero-api",
+  "description": "Api for Impero server management service",
+  "homepage": "https://github.com/pckg-app/impero-api",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Bojan Rajh",
+      "email": "schtr4jh@schtr4jh.net"
+    }
+  ],
+  "require": {},
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-0": {
+      "Pckg\\Impero\\Api": ["src\\"]
+    }
+  }
+}
