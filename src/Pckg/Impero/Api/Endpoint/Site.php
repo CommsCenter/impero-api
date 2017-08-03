@@ -13,4 +13,9 @@ class Site extends Endpoint
         $this->data = new Object($this->api->getApiResponse('site'));
     }
 
+    public function deploy($data = [])
+    {
+        $this->api->postApi('site/' . $this->data['id'] . '/deploy', $data);
+    }
+
 }
