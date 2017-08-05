@@ -13,9 +13,10 @@ class Endpoint
      */
     protected $data;
 
-    public function __construct(Api $api)
+    public function __construct(Api $api, $data = [])
     {
         $this->api = $api;
+        $this->data = [];
     }
 
 }
