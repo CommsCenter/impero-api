@@ -16,7 +16,7 @@ class Endpoint
     public function __construct(Api $api, $data = [])
     {
         $this->api = $api;
-        $this->data = [];
+        $this->data = $data;
     }
 
 }
