@@ -54,9 +54,9 @@ class Api
         return (new User($this));
     }
 
-    public function site()
+    public function site($data = [])
     {
-        return (new Site($this));
+        return (new Site($this, $data));
     }
 
     public function database()
