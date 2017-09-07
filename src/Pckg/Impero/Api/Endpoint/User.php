@@ -11,6 +11,8 @@ class User extends Endpoint
         $this->api->postApi('user', $data);
 
         $this->data = new Object($this->api->getApiResponse('user'));
+
+        return $this;
     }
 
 }
