@@ -15,9 +15,9 @@ class Site extends Endpoint
         return $this;
     }
 
-    public function exec($data = [])
+    public function exec($data = [], $options = [])
     {
-        $this->api->postApi('site/' . $this->data['id'] . '/exec', $data);
+        $this->api->postApi('site/' . $this->data['id'] . '/exec', $data, $options);
 
         return $this;
     }
