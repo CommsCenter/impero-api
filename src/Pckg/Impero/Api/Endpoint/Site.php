@@ -24,7 +24,7 @@ class Site extends Endpoint
 
     public function createFile($data = [])
     {
-        $this->api->postApi('createFile/' . $this->data['id'] . '/exec', $data);
+        $this->api->postApi('site/' . $this->data['id'] . '/createFile', $data);
 
         return $this;
     }
