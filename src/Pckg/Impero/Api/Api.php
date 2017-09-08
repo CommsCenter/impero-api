@@ -18,10 +18,10 @@ class Api
 
     public function getApiResponse($key = null)
     {
-        $decoded = json_decode($this->response->getBody());
+        $decoded = json_decode($this->response->getBody(), true);
 
         if ($key) {
-            return $decoded->{$key};
+            return $decoded[$key];
         }
 
         return $decoded;
