@@ -16,9 +16,15 @@ class Api
      */
     protected $response;
 
-    public function getApiResponse($key)
+    public function getApiResponse($key = null)
     {
-        return json_decode($this->response->getBody())->{$key};
+        $decoded = json_decode($this->response->getBody());
+
+        if ($key) {
+            return $decoded->{$key};
+        }
+
+        return $decoded;
     }
 
     public function postApi($url, $data = [])
