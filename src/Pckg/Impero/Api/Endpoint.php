@@ -19,4 +19,9 @@ class Endpoint
         $this->data = $data;
     }
 
+    public function data()
+    {
+        return $this->data;
+    }
+
 }
