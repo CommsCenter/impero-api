@@ -24,7 +24,7 @@ class Endpoint implements ArrayAccess
 
     public function data()
     {
-        return $this->data;
+        return $this->data->data();
     }
 
     public function offsetSet($offset, $value)
