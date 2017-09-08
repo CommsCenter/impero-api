@@ -1,6 +1,7 @@
 <?php namespace Pckg\Impero\Api;
 
 use ArrayAccess;
+use Pckg\Database\Object;
 
 class Endpoint implements ArrayAccess
 {
@@ -15,10 +16,10 @@ class Endpoint implements ArrayAccess
      */
     protected $data;
 
-    public function __construct(Api $api, $data = [])
+    public function __construct(Api $api = null, $data = [])
     {
         $this->api = $api;
-        $this->data = $data;
+        $this->data = is_object($data) ? $data : new Object($data);
     }
 
     public function data()
@@ -35,7 +36,7 @@ class Endpoint implements ArrayAccess
 
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->data);
+        return array_key_exists($offset, $this->data->data());
     }
 
     public function offsetUnset($offset)
@@ -47,7 +48,12 @@ class Endpoint implements ArrayAccess
 
     public function offsetGet($offset)
     {
-        return $this->data[$offset] ?? null;
+        return $this->__get($offset);
+    }
+
+    public function __get($key)
+    {
+        return $this->data[$key] ?? null;
     }
 
 }
