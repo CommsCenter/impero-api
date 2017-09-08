@@ -16,15 +16,15 @@ class Api
      */
     protected $response;
 
-    public function getApiResponse($key = null)
+    public function getApiResponse($key = null, $default = [])
     {
         $decoded = json_decode($this->response->getBody(), true);
 
         if ($key) {
-            return $decoded[$key];
+            return $decoded[$key] ?? $default;
         }
 
-        return $decoded;
+        return $decoded ?? $default;
     }
 
     public function postApi($url, $data = [])
