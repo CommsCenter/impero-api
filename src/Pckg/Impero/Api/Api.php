@@ -43,13 +43,13 @@ class Api
         $this->response = $client->request(
             $type,
             config('pckg.impero.api.endpoint') . 'api/' . $url,
-            array_merge($data, [
-                RequestOptions::HEADERS => [
-                    'X-Impero-Api-Key'     => config('pckg.impero.api.key'),
-                    'X-Impero-Api-Version' => 'latest',
-                ],
-                RequestOptions::TIMEOUT => config('pckg.impero.api.timeout', 5),
-            ])
+            array_merge([
+                            RequestOptions::HEADERS => [
+                                'X-Impero-Api-Key'     => config('pckg.impero.api.key'),
+                                'X-Impero-Api-Version' => 'latest',
+                            ],
+                            RequestOptions::TIMEOUT => config('pckg.impero.api.timeout', 5),
+                        ], $data)
         );
 
         return $this;
