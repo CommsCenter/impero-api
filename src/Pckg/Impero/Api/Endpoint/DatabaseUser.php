@@ -11,6 +11,8 @@ class DatabaseUser extends Endpoint
         $this->api->postApi('databaseUser', $data);
 
         $this->data = new Object($this->api->getApiResponse('databaseUser'));
+
+        return $this;
     }
 
     public function addPrivileges($data)

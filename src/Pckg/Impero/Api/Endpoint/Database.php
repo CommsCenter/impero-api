@@ -11,6 +11,8 @@ class Database extends Endpoint
         $this->api->postApi('database', $data);
 
         $this->data = new Object($this->api->getApiResponse('database'));
+
+        return $this;
     }
 
 }
