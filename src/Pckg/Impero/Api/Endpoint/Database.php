@@ -22,4 +22,13 @@ class Database extends Endpoint
         return $this;
     }
 
+    public function search($data)
+    {
+        $this->api->postApi('database/search', $data);
+
+        $this->data = new Object($this->api->getApiResponse('database'));
+
+        return $this;
+    }
+
 }
