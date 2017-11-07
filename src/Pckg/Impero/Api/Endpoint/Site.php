@@ -17,14 +17,14 @@ class Site extends Endpoint
 
     public function exec($data = [], $options = [])
     {
-        $this->api->postApi('site/' . $this->data['id'] . '/exec', $data, $options);
+        $this->api->postApi('site/' . $this->id . '/exec', $data, $options);
 
         return $this;
     }
 
     public function createFile($data = [])
     {
-        $this->api->postApi('site/' . $this->data['id'] . '/createFile', $data);
+        $this->api->postApi('site/' . $this->id . '/createFile', $data);
 
         return $this;
     }
