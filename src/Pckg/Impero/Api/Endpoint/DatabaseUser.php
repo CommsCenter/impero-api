@@ -15,9 +15,4 @@ class DatabaseUser extends Endpoint
         return $this;
     }
 
-    public function addPrivileges($data)
-    {
-        $this->api->postApi('databaseUser/' . $this->id . '/privileges', $data);
-    }
-
 }
