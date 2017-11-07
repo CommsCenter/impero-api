@@ -15,4 +15,11 @@ class Database extends Endpoint
         return $this;
     }
 
+    public function importFile($file)
+    {
+        $this->api->postApi('database/' . $this->id . '/importFile', $file);
+
+        return $this;
+    }
+
 }
