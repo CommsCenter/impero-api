@@ -31,4 +31,25 @@ class Database extends Endpoint
         return $this;
     }
 
+    public function query($data)
+    {
+        $this->api->postApi('database/' . $this->id . '/query', $data);
+
+        return $this;
+    }
+
+    public function backup($data = [])
+    {
+        $this->api->postApi('database/' . $this->id . '/backup', $data);
+
+        return $this;
+    }
+
+    public function replicate($data = [])
+    {
+        $this->api->postApi('database/' . $this->id . '/replicate', $data);
+
+        return $this;
+    }
+
 }

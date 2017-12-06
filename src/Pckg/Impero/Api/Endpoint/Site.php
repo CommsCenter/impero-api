@@ -29,4 +29,11 @@ class Site extends Endpoint
         return $this;
     }
 
+    public function letsencrypt($data = [])
+    {
+        $this->api->postApi('site/' . $this->id . '/letsencrypt', $data);
+
+        return $this;
+    }
+
 }
