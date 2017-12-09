@@ -36,4 +36,12 @@ class Site extends Endpoint
         return $this;
     }
 
+    public function htdocsDir()
+    {
+    }
+
+    public function logsDir()
+    {
+    }
+
 }

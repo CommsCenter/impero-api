@@ -5,6 +5,7 @@ use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\RequestOptions;
 use Pckg\Impero\Api\Endpoint\Database;
 use Pckg\Impero\Api\Endpoint\DatabaseUser;
+use Pckg\Impero\Api\Endpoint\Server;
 use Pckg\Impero\Api\Endpoint\Site;
 use Pckg\Impero\Api\Endpoint\User;
 
@@ -63,6 +64,11 @@ class Api
     public function site($data = [])
     {
         return (new Site($this, $data));
+    }
+
+    public function server($data = [])
+    {
+        return (new Server($this, $data));
     }
 
     public function database()
