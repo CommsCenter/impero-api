@@ -36,6 +36,34 @@ class Site extends Endpoint
         return $this;
     }
 
+    public function hasDir($dir)
+    {
+        $this->api->postApi('site/' . $this->id . '/has-dir', ['dir' => $dir]);
+
+        return $this->api->getApiResponse('hasDir');
+    }
+
+    public function hasSiteDir($dir)
+    {
+        $this->api->postApi('site/' . $this->id . '/has-site-dir', ['dir' => $dir]);
+
+        return $this->api->getApiResponse('hasSiteDir');
+    }
+
+    public function hasRootDir($dir)
+    {
+        $this->api->postApi('site/' . $this->id . '/has-root-dir', ['dir' => $dir]);
+
+        return $this->api->getApiResponse('hasRootDir');
+    }
+
+    public function hasSiteSymlink($link)
+    {
+        $this->api->postApi('site/' . $this->id . '/has-site-symlink', ['symlink' => $link]);
+
+        return $this->api->getApiResponse('hasSiteSymlink');
+    }
+
     public function htdocsDir()
     {
     }

@@ -15,4 +15,13 @@ class User extends Endpoint
         return $this;
     }
 
+    public function fetch($id)
+    {
+        $this->api->getApi('user/' . $id);
+
+        $this->data = new Object($this->api->getApiResponse('user'));
+
+        return $this;
+    }
+
 }
