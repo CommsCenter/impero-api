@@ -15,6 +15,22 @@ class Site extends Endpoint
         return $this;
     }
 
+    public function fetch($id)
+    {
+        $this->api->getApi('site/' . $id);
+
+        $this->data = new Obj($this->api->getApiResponse('site'));
+
+        return $this;
+    }
+
+    public function setDomain($domain, $domains, $restartApache = true)
+    {
+        $this->api->postApi('site/' . $this->id . '/set-domain', ['domain' => $domain, 'domains' => $domains, 'restart_apache' => $restartApache]);
+
+        return $this;
+    }
+
     public function exec($data = [], $options = [])
     {
         $this->api->postApi('site/' . $this->id . '/exec', $data, $options);
