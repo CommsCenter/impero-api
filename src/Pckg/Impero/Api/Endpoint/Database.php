@@ -1,6 +1,6 @@
 <?php namespace Pckg\Impero\Api\Endpoint;
 
-use Pckg\Database\Object;
+use Pckg\Database\Obj;
 use Pckg\Impero\Api\Endpoint;
 
 class Database extends Endpoint
@@ -10,7 +10,7 @@ class Database extends Endpoint
     {
         $this->api->postApi('database', $data);
 
-        $this->data = new Object($this->api->getApiResponse('database'));
+        $this->data = new Obj($this->api->getApiResponse('database'));
 
         return $this;
     }
@@ -26,7 +26,7 @@ class Database extends Endpoint
     {
         $this->api->postApi('database/search', $data);
 
-        $this->data = new Object($this->api->getApiResponse('database'));
+        $this->data = new Obj($this->api->getApiResponse('database'));
 
         return $this;
     }

@@ -1,6 +1,6 @@
 <?php namespace Pckg\Impero\Api\Endpoint;
 
-use Pckg\Database\Object;
+use Pckg\Database\Obj;
 use Pckg\Impero\Api\Endpoint;
 
 class Server extends Endpoint
@@ -10,7 +10,7 @@ class Server extends Endpoint
     {
         $this->api->postApi('server', $data);
 
-        $this->data = new Object($this->api->getApiResponse('site'));
+        $this->data = new Obj($this->api->getApiResponse('site'));
 
         return $this;
     }

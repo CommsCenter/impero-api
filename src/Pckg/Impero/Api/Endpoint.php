@@ -1,7 +1,7 @@
 <?php namespace Pckg\Impero\Api;
 
 use ArrayAccess;
-use Pckg\Database\Object;
+use Pckg\Database\Obj;
 
 class Endpoint implements ArrayAccess
 {
@@ -19,7 +19,7 @@ class Endpoint implements ArrayAccess
     public function __construct(Api $api = null, $data = [])
     {
         $this->api = $api;
-        $this->data = is_object($data) ? $data : new Object($data);
+        $this->data = is_object($data) ? $data : new Obj($data);
     }
 
     public function data()
