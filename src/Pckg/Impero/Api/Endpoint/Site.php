@@ -95,7 +95,7 @@ class Site extends Endpoint
     {
         $user = $this->api->user()->fetch($this->user_id);
 
-        return '/www/' . $user->username;
+        return '/www/' . $user->username . '/' . $this->document_root . '/';
     }
 
     public function storageDir()
