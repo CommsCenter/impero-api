@@ -26,7 +26,8 @@ class Site extends Endpoint
 
     public function setDomain($domain, $domains, $restartApache = true)
     {
-        $this->api->postApi('site/' . $this->id . '/set-domain', ['domain' => $domain, 'domains' => $domains, 'restart_apache' => $restartApache]);
+        $this->api->postApi('site/' . $this->id . '/set-domain',
+                            ['domain' => $domain, 'domains' => $domains, 'restart_apache' => $restartApache]);
 
         return $this;
     }
@@ -82,10 +83,35 @@ class Site extends Endpoint
 
     public function htdocsDir()
     {
+        return $this->siteDir() . 'htdocs/';
     }
 
     public function logsDir()
     {
+        return $this->siteDir() . 'logs/';
+    }
+
+    public function siteDir()
+    {
+        $user = $this->api->user()->fetch($this->user_id);
+
+        return '/www/' . $user->username;
+    }
+
+    public function storageDir()
+    {
+        $storageServerPath = '/mnt/volume-fra1-01/live/';
+        $user = $this->api->user()->fetch($this->user_id);
+
+        return $storageServerPath . $user->username . '/' . $this->document_root . '/';
+    }
+
+    public function backupDir()
+    {
+        $storageServerPath = '/mnt/volume-fra1-01/backup/';
+        $user = $this->api->user()->fetch($this->user_id);
+
+        return $storageServerPath . $user->username . '/' . $this->document_root . '/';
     }
 
 }
