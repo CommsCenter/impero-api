@@ -24,6 +24,13 @@ class Site extends Endpoint
         return $this;
     }
 
+    public function redeploy($data = [])
+    {
+        $this->api->postApi('site/' . $this->id . '/redeploy', $data);
+
+        return $this;
+    }
+
     public function setDomain($domain, $domains, $restartApache = true)
     {
         $this->api->postApi('site/' . $this->id . '/set-domain',
