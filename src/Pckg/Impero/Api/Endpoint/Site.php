@@ -31,6 +31,13 @@ class Site extends Endpoint
         return $this;
     }
 
+    public function check($data = [])
+    {
+        $this->api->postApi('site/' . $this->id . '/check', $data);
+
+        return $this->api->getApiResponse('check');
+    }
+
     public function setDomain($domain, $domains, $restartApache = true)
     {
         $this->api->postApi('site/' . $this->id . '/set-domain',
