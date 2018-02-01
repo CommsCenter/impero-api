@@ -31,6 +31,13 @@ class Site extends Endpoint
         return $this;
     }
 
+    public function deploy($data = [])
+    {
+        $this->api->postApi('site/' . $this->id . '/deploy', $data);
+
+        return $this;
+    }
+
     public function check($data = [])
     {
         $this->api->postApi('site/' . $this->id . '/check', $data);
