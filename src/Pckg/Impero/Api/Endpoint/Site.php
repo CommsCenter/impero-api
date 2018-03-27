@@ -24,9 +24,16 @@ class Site extends Endpoint
         return $this;
     }
 
-    public function redeploy($data = [])
+    public function checkout($data = [])
     {
-        $this->api->postApi('site/' . $this->id . '/redeploy', $data);
+        $this->api->postApi('site/' . $this->id . '/checkout', $data);
+
+        return $this;
+    }
+
+    public function recheckout($data = [])
+    {
+        $this->api->postApi('site/' . $this->id . '/recheckout', $data);
 
         return $this;
     }
