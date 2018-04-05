@@ -95,6 +95,13 @@ class Site extends Endpoint
         return $this->api->getApiResponse('hasSiteDir');
     }
 
+    public function hasSiteFile($file)
+    {
+        $this->api->postApi('site/' . $this->id . '/has-site-file', ['file' => $file]);
+
+        return $this->api->getApiResponse('hasSiteFile');
+    }
+
     public function hasRootDir($dir)
     {
         $this->api->postApi('site/' . $this->id . '/has-root-dir', ['dir' => $dir]);
@@ -140,6 +147,11 @@ class Site extends Endpoint
         $user = $this->api->user()->fetch($this->user_id);
 
         return $storageServerPath . $user->username . '/' . $this->document_root . '/';
+    }
+
+    public function getCronjobs()
+    {
+        return [];
     }
 
 }
