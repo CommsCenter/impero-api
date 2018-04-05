@@ -1,5 +1,6 @@
 <?php namespace Pckg\Impero\Api\Endpoint;
 
+use GuzzleHttp\RequestOptions;
 use Pckg\Database\Obj;
 use Pckg\Impero\Api\Endpoint;
 
@@ -26,6 +27,8 @@ class Site extends Endpoint
 
     public function checkout($data = [])
     {
+        $data[RequestOptions::TIMEOUT] = 60;
+
         $this->api->postApi('site/' . $this->id . '/checkout', $data);
 
         return $this;
@@ -33,6 +36,8 @@ class Site extends Endpoint
 
     public function recheckout($data = [])
     {
+        $data[RequestOptions::TIMEOUT] = 60;
+
         $this->api->postApi('site/' . $this->id . '/recheckout', $data);
 
         return $this;
@@ -151,7 +156,9 @@ class Site extends Endpoint
 
     public function getCronjobs()
     {
-        return [];
+        $this->api->getApi('site/' . $this->id . '/cronjobs');
+
+        return $this->api->getApiResponse('cronjobs');
     }
 
 }
