@@ -16,6 +16,15 @@ class Site extends Endpoint
         return $this;
     }
 
+    public function delete()
+    {
+        $this->api->deleteApi('site/' . $this->id);
+
+        $this->data = new Obj($this->api->getApiResponse('site'));
+
+        return $this;
+    }
+
     public function fetch($id)
     {
         $this->api->getApi('site/' . $id);
@@ -60,7 +69,7 @@ class Site extends Endpoint
     public function setDomain($domain, $domains, $restartApache = true)
     {
         $this->api->postApi('site/' . $this->id . '/set-domain',
-                            ['domain' => $domain, 'domains' => $domains, 'restart_apache' => $restartApache]);
+            ['domain' => $domain, 'domains' => $domains, 'restart_apache' => $restartApache]);
 
         return $this;
     }
@@ -159,6 +168,13 @@ class Site extends Endpoint
         $this->api->getApi('site/' . $this->id . '/cronjobs');
 
         return $this->api->getApiResponse('cronjobs');
+    }
+
+    public function setMysqlSlave(array $data = [])
+    {
+        $this->api->postApi('site/' . $this->id . '/mysql-slave', $data);
+
+        return $this->api->getApiResponse('site');
     }
 
 }
