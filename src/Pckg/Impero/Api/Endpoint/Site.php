@@ -66,10 +66,12 @@ class Site extends Endpoint
         return $this->api->getApiResponse('check');
     }
 
-    public function setDomain($domain, $domains, $restartApache = true)
+    public function setDomain($domain, $domains, $restartApache = true, $letsencrypt = true)
     {
-        $this->api->postApi('site/' . $this->id . '/set-domain',
-            ['domain' => $domain, 'domains' => $domains, 'restart_apache' => $restartApache]);
+        $this->api->postApi(
+            'site/' . $this->id . '/set-domain',
+            ['domain' => $domain, 'domains' => $domains, 'restart_apache' => $restartApache, 'letsencrypt' => $letsencrypt]
+        );
 
         return $this;
     }
@@ -175,6 +177,41 @@ class Site extends Endpoint
         $this->api->postApi('site/' . $this->id . '/mysql-slave', $data);
 
         return $this->api->getApiResponse('site');
+    }
+
+    public function getInfrastructure()
+    {
+        $this->api->getApi('site/' . $this->id . '/infrastructure');
+
+        return $this->api->getApiResponse('infrastructure');
+    }
+
+    public function changeVariable($vars)
+    {
+        $this->api->postApi('site/' . $this->id . '/change-variable', $vars);
+
+        return $this->api->getApiResponse('vars');
+    }
+
+    public function changePckg($pckg)
+    {
+        $this->api->postApi('site/' . $this->id . '/change-pckg', ['pckg' => $pckg]);
+
+        return $this->api->getApiResponse('site');
+    }
+
+    public function getVars()
+    {
+        $this->api->getApi('site/' . $this->id . '/vars');
+
+        return $this->api->getApiResponse('vars');
+    }
+
+    public function getFileContent($file)
+    {
+        $this->api->postApi('site/' . $this->id . '/file-content', ['file' => $file]);
+
+        return $this->api->getApiResponse('content');
     }
 
 }
