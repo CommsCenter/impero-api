@@ -214,4 +214,25 @@ class Site extends Endpoint
         return $this->api->getApiResponse('content');
     }
 
+    public function redeployConfigService()
+    {
+        $this->api->postApi('site/' . $this->id . '/redeploy-config-service');
+
+        return $this->api->getApiResponse('site');
+    }
+
+    public function redeploySslService()
+    {
+        $this->api->postApi('site/' . $this->id . '/redeploy-ssl-service', [RequestOptions::TIMEOUT => 60]);
+
+        return $this->api->getApiResponse('site');
+    }
+
+    public function redeployCronService()
+    {
+        $this->api->postApi('site/' . $this->id . '/redeploy-cron-service');
+
+        return $this->api->getApiResponse('site');
+    }
+
 }
