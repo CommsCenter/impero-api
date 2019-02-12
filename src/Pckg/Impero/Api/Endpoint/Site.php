@@ -235,4 +235,11 @@ class Site extends Endpoint
         return $this->api->getApiResponse('site');
     }
 
+    public function script($script)
+    {
+        $this->api->postApi('site/' . $this->id . '/script', ['script' => $script]);
+
+        return $this->api->getApiResponse('site');
+    }
+
 }
