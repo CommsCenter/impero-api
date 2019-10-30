@@ -36,18 +36,18 @@ class Site extends Endpoint
 
     public function checkout($data = [])
     {
-        $data[RequestOptions::TIMEOUT] = 60;
+        $options = [RequestOptions::TIMEOUT => 60];
 
-        $this->api->postApi('site/' . $this->id . '/checkout', $data);
+        $this->api->postApi('site/' . $this->id . '/checkout', $data, $options);
 
         return $this;
     }
 
     public function recheckout($data = [])
     {
-        $data[RequestOptions::TIMEOUT] = 60;
+        $options = [RequestOptions::TIMEOUT => 60];
 
-        $this->api->postApi('site/' . $this->id . '/recheckout', $data);
+        $this->api->postApi('site/' . $this->id . '/recheckout', $data, $options);
 
         return $this;
     }
