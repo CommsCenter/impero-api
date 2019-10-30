@@ -235,6 +235,13 @@ class Site extends Endpoint
         return $this->api->getApiResponse('site');
     }
 
+    public function scale($data = [])
+    {
+        $this->api->postApi('site/' . $this->id . '/scale', $data);
+
+        return $this;
+    }
+
     public function script($script)
     {
         $this->api->postApi('site/' . $this->id . '/script', ['script' => $script]);
