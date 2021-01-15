@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "guzzlehttp/guzzle": "^6.*"
+    "guzzlehttp/guzzle": "7.*"
   },
   "minimum-stability": "dev",
   "autoload": {
