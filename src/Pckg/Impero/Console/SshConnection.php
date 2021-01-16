@@ -1,75 +1,38 @@
 <?php namespace Pckg\Impero\Console;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
-use Pckg\Framework\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Yaml\Yaml;
 
-class DeployImpero extends Command
+trait SshConnection
 {
 
     protected $connection;
 
-    /**
-     * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
-     */
-    public function configure()
-    {
-        $this->setName('impero:deploy')->addArguments([
-            'pckg-build-id' => 'Build ID variable, usually GIT commit hash',
-        ]);
-    }
-
-    public function handle()
+    protected function getPckg()
     {
         $this->outputDated('Reading ./.pckg/pckg.yaml prod environment');
         $pckg = Yaml::parseFile(path('root') . '.pckg/pckg.yaml');
+
+        if (!$pckg) {
+            throw new \Exception('pckg.yaml is not readable');
+        }
+
+        if (!is_file(path('root/.pckg/') . '.deploy.pub')) {
+            //throw new \Exception('Public deployment key is missing');
+        }
+
+        if (!is_file(path('root/.pckg/') . '.deploy.key')) {
+            //throw new \Exception('Private deployment key is missing');
+        }
+
         $environment = $pckg['environment']['prod'] ?? null;
         if (!$environment) {
             throw new \Exception('Production environment is not set');
         }
 
-        if (!is_file(path('root/.pckg/') . '.deploy.pub')) {
-            throw new \Exception('Public deployment key is missing');
-        }
-
-        if (!is_file(path('root/.pckg/') . '.deploy.key')) {
-            throw new \Exception('Private deployment key is missing');
-        }
-
-        $this->outputDated('Building deploy configuration');
-
-        $env = '';
-        if ($commit = $this->argument('pckg-build-id')) {
-            $env = 'env PCKG_BUILD_ID=875ee4de8525d05ccbf62eec8f5c379742836c59 ';
-        }
-
-        foreach ($pckg['checkout']['swarms'] as $swarm) {
-            $entrypoints = collect($swarm['entrypoint'])->map(function ($entrypoint) {
-                return '-c ' . $entrypoint;
-            })->implode(' ');
-
-            $commands[] = 'sudo ' . $env . 'docker stack deploy ' . $swarm['name'] . ' ' . $entrypoints . ' --with-registry-auth --prune --resolve-image always';
-        }
-        array_unshift($commands, 'cd ' . $environment['dir']);
-
-        $commands = implode(' && ', $commands);
-
-        $commands = 'date';
-
-        $connection = $this->getSshConnection($environment);
-        $this->outputDated('Connection established, deploying');
-        try {
-            $this->executeDeploy($commands);
-            $this->outputDated('Deployed');
-        } catch (\Throwable $e) {
-            ssh2_disconnect($this->connection);
-            $this->outputDated('EXCEPTION: ' . exception($e), 'error');
-        }
+        return $pckg;
     }
 
-    private function executeDeploy($command)
+    protected function executeSshCommand($command)
     {
         $stream = ssh2_exec($this->connection, $command);
         $errorStream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
@@ -83,7 +46,7 @@ class DeployImpero extends Command
         $errorStreamContent && $this->outputDated($errorStreamContent, 'error');
     }
 
-    private function getSshConnection(array $config)
+    protected function getSshConnection(array $config)
     {
         /**
          * Unpack
@@ -110,7 +73,7 @@ class DeployImpero extends Command
         $key = path('root') . '/.pckg/.deploy';
         $keygen = null;
         $command = 'ssh-keygen -lf ' . $key . '.pub -E MD5';
-        
+
         exec($command, $keygen);
         $keygen = $keygen[0] ?? null;
         $fingerprint = ssh2_fingerprint($this->connection, SSH2_FINGERPRINT_MD5 | SSH2_FINGERPRINT_HEX);
@@ -145,5 +108,4 @@ class DeployImpero extends Command
 
         return true;
     }
-
 }
