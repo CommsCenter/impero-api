@@ -10,7 +10,8 @@
     }
   ],
   "require": {
-    "guzzlehttp/guzzle": "7.*"
+    "guzzlehttp/guzzle": "7.*",
+    "symfony/yaml": ">=3"
   },
   "minimum-stability": "dev",
   "autoload": {
