@@ -3,6 +3,7 @@
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Pckg\Framework\Console\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Yaml\Yaml;
 
@@ -18,7 +19,10 @@ class DeployImperoSwarm extends Command
     {
         $this->setName('impero:deploy:swarm')->addArguments([
             'pckg-build-id' => 'Build ID variable, usually GIT commit hash',
-        ]);
+        ], InputArgument::REQUIRED)->addOptions([
+            'git' => 'Pull from git first',
+            'dry' => 'Only output commands',
+        ], InputOption::VALUE_NONE);
     }
 
     public function handle()
@@ -29,8 +33,14 @@ class DeployImperoSwarm extends Command
         $this->outputDated('Building deploy configuration');
 
         $env = '';
-        if ($commit = $this->argument('pckg-build-id')) {
+        $commit = $this->argument('pckg-build-id');
+        if ($commit) {
             $env = 'env PCKG_BUILD_ID=' . $commit . ' ';
+        }
+
+        $git = $this->option('git');
+        if ($git) {
+            $commands[] = 'git pull --ff';
         }
 
         foreach ($pckg['checkout']['swarms'] as $swarm) {
@@ -42,9 +52,15 @@ class DeployImperoSwarm extends Command
         }
         array_unshift($commands, 'cd ' . $environment['dir']);
 
-        die(implode("\n", $commands) . "\n");
+        echo implode("\n", $commands) . "\n";
 
         $commands = implode(' && ', $commands);
+
+        $dry = $this->option('dry');
+        if ($dry) {
+            $this->outputDated('Dry');
+            return;
+        }
 
         $connection = $this->getSshConnection($environment);
         $this->outputDated('Connection established, deploying');
