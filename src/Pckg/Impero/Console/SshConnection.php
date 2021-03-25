@@ -34,6 +34,7 @@ trait SshConnection
 
     protected function executeSshCommand($command)
     {
+        $this->outputDated('SSH: ' . $command);
         $stream = ssh2_exec($this->connection, $command);
         $errorStream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
 
@@ -42,10 +43,15 @@ trait SshConnection
 
         $errorStreamContent = stream_get_contents($errorStream);
         $infoStreamContent = stream_get_contents($stream);
-        $infoStreamContent && $this->outputDated($infoStreamContent);
+        $infoStreamContent && $this->outputDated($infoStreamContent, 'info');
         $errorStreamContent && $this->outputDated($errorStreamContent, 'error');
     }
 
+    /**
+     * @param array $config
+     * @return bool
+     * @throws \Exception
+     */
     protected function getSshConnection(array $config)
     {
         /**
