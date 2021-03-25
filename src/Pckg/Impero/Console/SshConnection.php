@@ -96,7 +96,7 @@ trait SshConnection
             throw new Exception('Not readable private key: ' . $key . '.key');
         }
 
-        $auth = ssh2_auth_pubkey_file($this->connection, $user, $key . '.pub', $key . '.key', '');
+        $auth = ssh2_auth_pubkey_file($this->connection, $user, $key . '.pub', $key . '.key', null);
 
         /**
          * Throw exception on misconfiguration.
