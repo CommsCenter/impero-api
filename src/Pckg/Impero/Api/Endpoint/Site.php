@@ -186,6 +186,13 @@ class Site extends Endpoint
         return $this->api->getApiResponse('infrastructure');
     }
 
+    public function getStats()
+    {
+        $this->api->getApi('site/' . $this->id . '/stats');
+
+        return $this->api->getApiResponse('stats');
+    }
+
     public function changeVariable($vars)
     {
         $this->api->postApi('site/' . $this->id . '/change-variable', $vars);
