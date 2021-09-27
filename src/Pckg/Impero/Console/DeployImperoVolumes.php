@@ -8,7 +8,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class DeployImperoVolumes extends Command
 {
-    
+
     use SshConnection;
 
     /**
@@ -17,7 +17,11 @@ class DeployImperoVolumes extends Command
     public function configure()
     {
         $this->setName('impero:deploy:volumes')
-            ->setDescription('Deploy volumes from ./.pckg/pckg.yaml deploy.volumes');
+            ->setDescription('Deploy volumes from ./.pckg/pckg.yaml deploy.volumes')
+            ->addOptions([
+                'no-create' => 'Exit with error when volume doesn\'t exist',
+                'auto-create' => 'Auto create volume when it doesn\'t exit',
+            ], InputOption::VALUE_NONE);
     }
 
     public function handle()
