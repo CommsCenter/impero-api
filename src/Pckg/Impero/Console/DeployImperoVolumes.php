@@ -27,7 +27,7 @@ class DeployImperoVolumes extends Command
     public function handle()
     {
         $pckg = $this->getPckg();
-        $environment = $pckg['environment']['prod'] ?? null;
+        $environment = $this->getPckg('env.yaml')['prod'] ?? null;
 
         $this->outputDated('Building volumes configuration');
         $commands = [];
@@ -40,6 +40,7 @@ class DeployImperoVolumes extends Command
             } else if ($volume['type'] === 'shared') {
                 // use mounted volumes
                 $this->outputDated('Shared volumes are not supported');
+                $commands[] = '[ ! -d "' . $volume['source'] . '" ] && echo "Missing dir" && echo ' . $volume['source'];
             } else {
                 throw new \Exception('Invalid volume type ' . json_encode($volume));
             }
@@ -49,14 +50,12 @@ class DeployImperoVolumes extends Command
             $this->outputDated('No volumes');
         }
 
-        die(implode("\n", $commands) . "\n");
-
         $connection = $this->getSshConnection($environment);
         $this->outputDated('Connection established, creating volumes');
         try {
             foreach ($commands as $command) {
                 $this->outputDated('Running ' . $command);
-                $this->executeSshCommand($commands);
+                $this->executeSshCommand($command);
                 $this->outputDated('Ran');
             }
         } catch (\Throwable $e) {
