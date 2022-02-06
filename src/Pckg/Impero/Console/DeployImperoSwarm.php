@@ -233,7 +233,8 @@ class DeployImperoSwarm extends Command
          * Prepare .zip.
          */
         $zip = new \ZipArchive();
-        $file = $dated . '.zip';
+        $date = date('Ymd-His');
+        $file = $date . '.zip';
         $zipFullpath = path('tmp') . $file;
 
         if ($zip->open($zipFullpath, \ZipArchive::CREATE) !== true) {
@@ -283,7 +284,7 @@ class DeployImperoSwarm extends Command
 
         $zip->close();
         die('zip closed');
-        
+
         /**
          * Establish connection
          */
@@ -300,7 +301,7 @@ class DeployImperoSwarm extends Command
                 /**
                  * Move to dir first.
                  */
-                $dated = date('Ymd-His') . '-' . $commit;
+                $dated = $date . '-' . $commit;
                 $dir = $environment ? $environment['dir'] . $dated . '/' : null;
 
                 /**
