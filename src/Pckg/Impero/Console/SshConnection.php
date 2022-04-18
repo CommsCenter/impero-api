@@ -9,13 +9,13 @@ trait SshConnection
 {
     protected $connection;
 
-    protected function getPckg()
+    protected function getPckg($file = 'pckg.yaml')
     {
-        $this->outputDated('Reading ./.pckg/pckg.yaml prod environment');
-        $pckg = Yaml::parseFile(path('root') . '.pckg/pckg.yaml');
+        $this->outputDated('Reading ./.pckg/' . $file . ' prod environment');
+        $pckg = Yaml::parseFile(path('root') . '.pckg/' . $file);
 
         if (!$pckg) {
-            throw new Exception('pckg.yaml is not readable');
+            throw new \Exception($file . ' is not readable');
         }
 
         if (!is_file(path('root/.pckg/') . '.deploy.pub')) {
@@ -24,11 +24,6 @@ trait SshConnection
 
         if (!is_file(path('root/.pckg/') . '.deploy.key')) {
             //throw new \Exception('Private deployment key is missing');
-        }
-
-        $environment = $pckg['environment']['prod'] ?? null;
-        if (!$environment) {
-            throw new Exception('Production environment is not set');
         }
 
         return $pckg;

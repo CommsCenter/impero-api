@@ -2,11 +2,7 @@
 
 namespace Pckg\Impero\Console;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
 use Pckg\Framework\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Yaml\Yaml;
 
 class DeployImperoConfigs extends Command
 {
@@ -24,7 +20,7 @@ class DeployImperoConfigs extends Command
     public function handle()
     {
         $pckg = $this->getPckg();
-        $environment = $pckg['environment']['prod'] ?? null;
+        $environment = $this->getPckg('env.yaml')['prod'] ?? null;
 
         $this->outputDated('Building configs configuration');
         $commands = [];
@@ -37,14 +33,12 @@ class DeployImperoConfigs extends Command
             $this->outputDated('No configs');
         }
 
-        die(implode("\n", $commands) . "\n");
-
         $connection = $this->getSshConnection($environment);
         $this->outputDated('Connection established, creating configs');
         try {
             foreach ($commands as $command) {
                 $this->outputDated('Running ' . $command);
-                $this->executeSshCommand($commands);
+                $this->executeSshCommand($command);
                 $this->outputDated('Ran');
             }
         } catch (\Throwable $e) {

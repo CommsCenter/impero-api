@@ -25,7 +25,8 @@ class DeployImperoSwarm extends Command
         ], InputOption::VALUE_REQUIRED)->addOptions([
             'git' => 'Pull from git first',
             'timed' => 'Deploy timed version',
-            'dry' => 'Only output commands',
+            'dry' => 'Only output commands', // should be default?
+            'now' => 'Run commands commands',
             'with-config' => 'Pre-migrate config',
             'with-volumes' => 'Pre-migrate volumes',
             'with-networks' => 'Pre-migrate networks',
@@ -35,6 +36,11 @@ class DeployImperoSwarm extends Command
     public function handle()
     {
         $pckg = $this->getPckg();
+        $environment = $this->getPckg('env.yaml')['prod'] ?? null;
+        if (!$environment) {
+            throw new \Exception('Production environment is not set');
+        }
+
         $envi = $this->option('env');
         if (!$envi) {
             throw new \Exception('--env is required');
@@ -84,9 +90,9 @@ class DeployImperoSwarm extends Command
             /**
              * Collect custom env variables.
              */
-            $customEnv = '';
+            $customEnv = [];
             foreach ($swarm['env'] ?? [] as $envKey => $envVal) {
-                $customEnv .= $envKey . '=' . escapeshellarg($envVal) . ' ';
+                $customEnv[] = $envKey . '=' . escapeshellarg($envVal);
             }
 
             /**
@@ -111,27 +117,14 @@ class DeployImperoSwarm extends Command
             /**
              * Build command.
              */
+            $mergedCustomEnv = implode(" \\\n", $customEnv);
+            if ($mergedCustomEnv) {
+                $mergedCustomEnv = "\\\n" . $mergedCustomEnv;
+            }
             $commands[] = ($envi !== 'localhost' ? 'sudo ' : '')
-                . $env . $customEnv . " \\\n"
+                . $env . $mergedCustomEnv . " \\\n"
                 . 'docker stack deploy ' . $swarm['name'] . " \\\n"
                 . $entrypoints . $tags;
-        }
-
-        $singleCommand = implode(" \\\n" . '&& ', $commands);
-        $dry = $this->option('dry');
-        if ($dry) {
-            $this->outputDated("\n" . $singleCommand);
-            $this->outputDated('Dry');
-            return;
-        }
-
-        /**
-         * Run on localhost.
-         */
-        if ($envi === 'localhost') {
-            $this->outputDated('Deploying project');
-            $this->exec($singleCommand);
-            return;
         }
 
         /**
@@ -139,6 +132,7 @@ class DeployImperoSwarm extends Command
          */
         $envFiles = [];
         $mountFiles = [];
+        $variables = [];
         foreach ($files as $file) {
             $this->output();
             $this->outputDated('Parsing ' . $file);
@@ -186,11 +180,46 @@ class DeployImperoSwarm extends Command
                         exit(1);
                     }
                 }
+
+                /**
+                 * Variables
+                 */
+                foreach ($service['environment'] ?? [] as $envKey => $envVal) {
+                    $variables[] = $envKey;
+                }
             }
         }
         $files = array_unique($files);
         $envFiles = array_unique($envFiles);
         $mountFiles = array_unique($mountFiles);
+
+        /**
+         * Check for variables that needs to be present ...
+         */
+
+
+        $singleCommand = implode(" \\\n" . '&& ', $commands);
+        $dry = $this->option('dry');
+        $now = $this->option('now');
+        if ($dry || !$now) {
+            $this->outputDated("\n" . $singleCommand);
+            $files && $this->outputDated("\n" . print_r($files, true));
+            $envFiles && $this->outputDated("\n" . print_r($envFiles, true));
+            $mountFiles && $this->outputDated("\n" . print_r($mountFiles, true));
+            $variables && $this->outputDated("\n" . print_r($variables, true));
+            $this->outputDated('Dry');
+            return;
+        }
+
+        /**
+         * Run on localhost.
+         */
+        if ($envi === 'localhost') {
+            $this->outputDated('Deploying project');
+            $this->output($singleCommand);
+            // $this->exec($singleCommand);
+            return;
+        }
 
         $this->output();
         $this->outputDated('Collecting commands');
@@ -206,8 +235,8 @@ class DeployImperoSwarm extends Command
          * Prepare .zip.
          */
         $zip = new \ZipArchive();
-        $dated = date('Y-m-d-h-i-s');
-        $file = $dated . '.zip';
+        $date = date('Ymd-His');
+        $file = $date . '.zip';
         $zipFullpath = path('tmp') . $file;
 
         if ($zip->open($zipFullpath, \ZipArchive::CREATE) !== true) {
@@ -256,7 +285,8 @@ class DeployImperoSwarm extends Command
         //$zip->addFromString('deploy.sh', implode("\n", array_slice($commands, 3)));
 
         $zip->close();
-        die('closed');
+        die('zip closed');
+
         /**
          * Establish connection
          */
@@ -273,7 +303,7 @@ class DeployImperoSwarm extends Command
                 /**
                  * Move to dir first.
                  */
-                $dated = date('Ymd-His') . '-' . $commit;
+                $dated = $date . '-' . $commit;
                 $dir = $environment ? $environment['dir'] . $dated . '/' : null;
 
                 /**

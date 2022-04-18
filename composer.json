@@ -15,7 +15,8 @@
     "pckg-app/frontend": "dev-next-8.0 as dev-master",
     "pckg-app/api": "dev-next-8.0 as dev-master",
     "ext-json": "*",
-    "ext-zip": "*"
+    "ext-zip": "*",
+    "ext-ssh2": "*"
   },
   "require-dev": {
     "pckg-app/frontend-dev": "dev-next-8.0 as dev-master"
