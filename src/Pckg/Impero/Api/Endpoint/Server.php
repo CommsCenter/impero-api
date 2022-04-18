@@ -1,11 +1,15 @@
-<?php namespace Pckg\Impero\Api\Endpoint;
+<?php
+
+namespace Pckg\Impero\Api\Endpoint;
 
 use Pckg\Database\Obj;
 use Pckg\Impero\Api\Endpoint;
 
+/**
+ * @property int|string $id
+ */
 class Server extends Endpoint
 {
-
     public function create($data = [])
     {
         $this->api->postApi('server', $data);
@@ -21,5 +25,4 @@ class Server extends Endpoint
 
         return $this;
     }
-
 }

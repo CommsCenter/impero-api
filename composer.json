@@ -11,12 +11,38 @@
   ],
   "require": {
     "guzzlehttp/guzzle": "^6.0 || ^7.0",
-    "symfony/yaml": ">=3"
+    "symfony/yaml": ">=3",
+    "pckg-app/frontend": "dev-next-8.0 as dev-master",
+    "pckg-app/api": "dev-next-8.0 as dev-master",
+    "ext-json": "*",
+    "ext-zip": "*"
+  },
+  "require-dev": {
+    "pckg-app/frontend-dev": "dev-next-8.0 as dev-master"
+  },
+  "scripts": {
+    "test": [
+      "true || vendor/bin/phpunit --help --stop-on-defect",
+      "true || vendor/bin/phpcloc cloc src/",
+      "vendor/bin/phpstan analyse src/ --level=5 || vendor/bin/phpstan analyse src/ --level=3",
+      "vendor/bin/phpcs -s --standard=PSR12 --extensions=php --warning-severity=8 --error-severity=1 --parallel=2 -p src/",
+      "vendor/bin/codecept run"
+    ],
+    "applycsandpatch": [
+      "composer autofix && composer autopatch"
+    ],
+    "autofix": [
+      "vendor/bin/phpcs --standard=PSR12 --extensions=php --report-diff=phpcs.diff --warning-severity=8 --error-severity=1 --parallel=2 -p src/"
+    ],
+    "autopatch": [
+      "patch -p0 -ui phpcs.diff ; rm phpcs.diff"
+    ]
   },
   "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
     "psr-0": {
-      "Pckg\\Impero": ["src\\"]
+      "Pckg": "src\\"
     }
   }
 }

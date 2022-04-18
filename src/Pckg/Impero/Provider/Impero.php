@@ -1,4 +1,6 @@
-<?php namespace Pckg\Impero\Provider;
+<?php
+
+namespace Pckg\Impero\Provider;
 
 use Pckg\Framework\Provider;
 use Pckg\Impero\Console\DeployImperoConfigs;
@@ -7,7 +9,6 @@ use Pckg\Impero\Console\DeployImperoVolumes;
 
 class Impero extends Provider
 {
-
     public function consoles()
     {
         return [
@@ -16,5 +17,4 @@ class Impero extends Provider
             DeployImperoConfigs::class,
         ];
     }
-
 }

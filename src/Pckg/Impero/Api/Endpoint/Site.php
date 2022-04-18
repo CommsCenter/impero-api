@@ -1,12 +1,18 @@
-<?php namespace Pckg\Impero\Api\Endpoint;
+<?php
+
+namespace Pckg\Impero\Api\Endpoint;
 
 use GuzzleHttp\RequestOptions;
 use Pckg\Database\Obj;
 use Pckg\Impero\Api\Endpoint;
 
+/**
+ * @property string|int $id
+ * @property int $user_id
+ * @property string $document_root
+ */
 class Site extends Endpoint
 {
-
     public function create($data = [])
     {
         $this->api->postApi('site', $data);
@@ -255,5 +261,4 @@ class Site extends Endpoint
 
         return $this->api->getApiResponse('site');
     }
-
 }

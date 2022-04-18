@@ -1,4 +1,6 @@
-<?php namespace Pckg\Impero\Api;
+<?php
+
+namespace Pckg\Impero\Api;
 
 use GuzzleHttp\RequestOptions;
 use Pckg\Impero\Api\Endpoint\Database;
@@ -9,12 +11,8 @@ use Pckg\Impero\Api\Endpoint\User;
 
 class Api extends \Pckg\Api\Api
 {
-
     /**
      * Api constructor.
-     *
-     * @param $endpoint
-     * @param $apiKey
      */
     public function __construct($endpoint, $apiKey)
     {
@@ -54,5 +52,4 @@ class Api extends \Pckg\Api\Api
     {
         return (new DatabaseUser($this));
     }
-
 }

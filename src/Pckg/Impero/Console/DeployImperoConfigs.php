@@ -1,4 +1,6 @@
-<?php namespace Pckg\Impero\Console;
+<?php
+
+namespace Pckg\Impero\Console;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
@@ -8,7 +10,6 @@ use Symfony\Component\Yaml\Yaml;
 
 class DeployImperoConfigs extends Command
 {
-    
     use SshConnection;
 
     /**
@@ -53,5 +54,4 @@ class DeployImperoConfigs extends Command
 
         ssh2_disconnect($this->connection);
     }
-
 }

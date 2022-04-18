@@ -1,0 +1,39 @@
+name: Pckg App Impero API CI
+
+on:
+  push:
+    branches: [ master, next-8.0 ]
+  pull_request:
+    branches: [ master, next-8.0 ]
+
+jobs:
+
+  checkout:
+    name: Checkout
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.pull_request.title, '[skip ci]') && !contains(github.event.pull_request.title, '[ci skip]')"
+    timeout-minutes: 20
+    strategy:
+      fail-fast: true
+      matrix:
+        php-versions: [ '8.0' ]
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+
+      - name: Restore Composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: composer-v1-${{ hashFiles('composer.lock') }}
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --optimize-autoloader --ignore-platform-reqs
+
+      - name: Run tests
+        run: composer test

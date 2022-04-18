@@ -1,4 +1,6 @@
-<?php namespace Pckg\Impero\Console;
+<?php
+
+namespace Pckg\Impero\Console;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
@@ -10,7 +12,6 @@ use Symfony\Component\Yaml\Yaml;
 
 class DeployImperoSwarm extends Command
 {
-
     use SshConnection;
 
     /**
@@ -57,6 +58,7 @@ class DeployImperoSwarm extends Command
          * Pull with git when git option is present.
          */
         $git = $this->option('git');
+        $commands = [];
         if ($git) {
             $commands[] = 'git pull --ff';
         }
@@ -204,6 +206,7 @@ class DeployImperoSwarm extends Command
          * Prepare .zip.
          */
         $zip = new \ZipArchive();
+        $dated = date('Y-m-d-h-i-s');
         $file = $dated . '.zip';
         $zipFullpath = path('tmp') . $file;
 
@@ -227,7 +230,7 @@ class DeployImperoSwarm extends Command
          */
         collect($envFiles)->each(
             function ($file) use ($zip) {
-                //$this->outputDated('Pushing env ' . $file);
+                $this->outputDated('Pushing env ' . $file . ' ' . $zip->getStatusString());
                 //$zip->addFile(path('root') . substr($file, 2), substr($file, 2));
             }
         );
@@ -292,5 +295,4 @@ class DeployImperoSwarm extends Command
             $this->outputDated('EXCEPTION: ' . exception($e), 'error');
         }
     }
-
 }

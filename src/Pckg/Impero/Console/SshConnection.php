@@ -1,10 +1,12 @@
-<?php namespace Pckg\Impero\Console;
+<?php
 
+namespace Pckg\Impero\Console;
+
+use Exception;
 use Symfony\Component\Yaml\Yaml;
 
 trait SshConnection
 {
-
     protected $connection;
 
     protected function getPckg()
@@ -13,7 +15,7 @@ trait SshConnection
         $pckg = Yaml::parseFile(path('root') . '.pckg/pckg.yaml');
 
         if (!$pckg) {
-            throw new \Exception('pckg.yaml is not readable');
+            throw new Exception('pckg.yaml is not readable');
         }
 
         if (!is_file(path('root/.pckg/') . '.deploy.pub')) {
@@ -26,7 +28,7 @@ trait SshConnection
 
         $environment = $pckg['environment']['prod'] ?? null;
         if (!$environment) {
-            throw new \Exception('Production environment is not set');
+            throw new Exception('Production environment is not set');
         }
 
         return $pckg;
@@ -50,7 +52,7 @@ trait SshConnection
     /**
      * @param array $config
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getSshConnection(array $config)
     {
@@ -68,7 +70,7 @@ trait SshConnection
         $this->connection = ssh2_connect($host, $port);
 
         if (!$this->connection) {
-            throw new \Exception('Cannot open connection');
+            throw new Exception('Cannot open connection');
         }
 
         $this->outputDated('Connection opened');
@@ -88,7 +90,7 @@ trait SshConnection
         $calculated = join(':', str_split(md5(base64_decode($content[1])), 2));
 
         if (!strpos($keygen, $calculated)) {
-            throw new \Exception("Wrong server fingerprint?", $fingerprint, $keygen, $calculated);
+            throw new Exception("Wrong server fingerprint?");
         }
 
         /**
@@ -102,13 +104,13 @@ trait SshConnection
             throw new Exception('Not readable private key: ' . $key . '.key');
         }
 
-        $auth = ssh2_auth_pubkey_file($this->connection, $user, $key . '.pub', $key . '.key', null);
+        $auth = ssh2_auth_pubkey_file($this->connection, $user, $key . '.pub', $key . '.key', '');
 
         /**
          * Throw exception on misconfiguration.
          */
         if (!$auth) {
-            throw new Exception('Cannot authenticate: ' . $type . ' ' . $user . ' ' . $key . ' ' . $host . ' ' .
+            throw new Exception('Cannot authenticate: ' . $user . ' ' . $key . ' ' . $host . ' ' .
                 $port);
         }
 

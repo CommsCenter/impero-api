@@ -1,59 +1,13 @@
-<?php namespace Pckg\Impero\Api;
+<?php
+
+namespace Pckg\Impero\Api;
 
 use ArrayAccess;
 use Pckg\Database\Obj;
 
-class Endpoint implements ArrayAccess
+/**
+ * @property Api $api
+ */
+class Endpoint extends \Pckg\Api\Endpoint
 {
-
-    /**
-     * @var Api
-     */
-    protected $api;
-
-    /**
-     * @var Object
-     */
-    protected $data;
-
-    public function __construct(Api $api = null, $data = [])
-    {
-        $this->api = $api;
-        $this->data = is_object($data) ? $data : new Obj($data);
-    }
-
-    public function data()
-    {
-        return $this->data->data();
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        $this->data[$offset] = $value;
-
-        return $this;
-    }
-
-    public function offsetExists($offset)
-    {
-        return array_key_exists($offset, $this->data->data());
-    }
-
-    public function offsetUnset($offset)
-    {
-        unset($this->data[$offset]);
-
-        return $this;
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->__get($offset);
-    }
-
-    public function __get($key)
-    {
-        return $this->data[$key] ?? null;
-    }
-
 }
